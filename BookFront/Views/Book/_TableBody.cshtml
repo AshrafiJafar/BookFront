@@ -1,0 +1,12 @@
+﻿@model IEnumerable<BookListDto>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Name</td>
+        <td>@item.PageCount</td>
+        <td>@item.AuthorName</td>
+        <td>@item.TypeName</td>
+        <td colspan="2">@item.SubTypeName</td>
+    </tr>
+}

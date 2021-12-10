@@ -1,0 +1,121 @@
+﻿@model IndexViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="form-group row">
+    <label class="col-sm-1 col-form-label" for="AuthorId">Author</label>
+    <div class="col-sm-3">
+        <select class="form-control" id="AuthorId" name="AuthorId">
+            <option value="" selected>--</option>
+            @foreach (var item in Model.Authors)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+    <label class="col-sm-1 col-form-label" for="TypeId">Type</label>
+    <div class="col-sm-3">
+        <select class="form-control" id="TypeId" name="TypeId" onchange="typeChanged();">
+            <option value="" selected>--</option>
+            @foreach (var item in Model.Types)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+    <label class="col-sm-1 col-form-label" for="SubTypeId">SubType</label>
+    <div class="col-sm-3">
+        <select class="form-control" id="SubTypeId" name="SubTypeId">
+            <option value="" selected>--</option>
+        </select>
+    </div>
+
+
+</div>
+
+
+<div class="form-group row">
+
+    <label class="col-sm-1 col-form-label" for="Search">Search</label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="Search" name="Search" placeholder="Search">
+    </div>
+    <div class="col-sm-2">
+        <button class="btn btn-info" onclick="search();">Search</button>
+        <button class="btn btn-success" onclick="searchWithProcedure();">Search</button>
+    </div>
+</div>
+
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>PageCount</th>
+                <th>Author</th>
+                <th>Type</th>
+                <th>SubType</th>
+                <th width="20"><a href="/Book/Create">Add</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            @await Html.PartialAsync("_TableBody",Model.Books)
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        function typeChanged() {
+            if ($("#TypeId").val() !== "") {
+                $.ajax({
+                    type: "Get",
+                    data: { "typeId": $("#TypeId").val() },
+                    url: "/Book/GetSubTypes",
+                    success: function (data) {
+
+                        $("#SubTypeId").html(data);
+                    }
+                });
+            }
+            else {
+                $("#SubTypeId").html("<option value=''>--</option>");
+            }
+        }
+
+        function search() {
+            $.ajax({
+                type: "Get",
+                data: {
+                    "typeId": $("#TypeId").val(),
+                    "subTypeId": $("#SubTypeId").val(),
+                    "authorId": $('#AuthorId').val(),
+                    "search": $("#Search").val()
+                },
+                url: "/Book/Search",
+                success: function (data) {
+                    $("table tbody").html(data);
+                }
+            });
+        }
+
+        function searchWithProcedure() {
+            $.ajax({
+                type: "Get",
+                data: {
+                    "typeId": $("#TypeId").val(),
+                    "subTypeId": $("#SubTypeId").val(),
+                    "authorId": $('#AuthorId').val(),
+                    "search": $("#Search").val()
+                },
+                url: "/Book/SearchWithProcedure",
+                success: function (data) {
+                    $("table tbody").html(data);
+                }
+            });
+        }
+    </script>
+}

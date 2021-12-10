@@ -1,0 +1,11 @@
+﻿@model Root
+
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>Root Item Count: @Model.items.Count</h1>
+
+<p>Root Has More: @Model.has_more.ToString()</p>
+<p>Root BackOff: @Model.backoff.ToString()</p>
+<p>Root Quota Max: @Model.quota_max.ToString()</p>
+<p>Root Quota Remaining: @Model.quota_remaining.ToString()</p>
